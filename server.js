@@ -11,6 +11,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.use('/select', require('./routes/select'));
+app.use('/queries', require('./routes/queries'));
 
 var port = appconfig['server']['port'];
 app.listen(port, function() {

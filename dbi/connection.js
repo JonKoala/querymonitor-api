@@ -2,7 +2,7 @@ const Sequelize = require('sequelize')
 
 const appconfig = require('../appconfig')
 
-var db = new Sequelize({
+var connection = new Sequelize({
   dialect: 'mssql',
   dialectModulePath: 'sequelize-msnodesqlv8',
   dialectOptions: {
@@ -16,4 +16,4 @@ var db = new Sequelize({
   logging: false
 });
 
-module.exports = db;
+module.exports = connection;

@@ -1,1 +1,2 @@
-module.exports.diario = require('./diario')
+module.exports.connection = require('./connection')
+module.exports.query = require('./query')

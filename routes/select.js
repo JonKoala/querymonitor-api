@@ -10,13 +10,13 @@ function isInjection(query) {
 
 router.get('/:query', (req, res) => {
   var userQuery = req.params.query;
-  
+
   if (isInjection(userQuery)) {
     res.status(500).send({msg: 'sql injection!'});
     return;
   }
 
-  dbi.diario.query(userQuery, { type: Sequelize.QueryTypes.SELECT })
+  dbi.connection.query(userQuery, { type: Sequelize.QueryTypes.SELECT })
     .then(result => {
       res.send(result);
     }).catch()
