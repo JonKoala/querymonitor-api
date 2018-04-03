@@ -12,6 +12,18 @@ router.get('/', (req, res) => {
   });
 });
 
+router.get('/:id', (req, res) => {
+
+  let id = req.params.id;
+
+  dbi.query.findById(id)
+  .then(query => {
+    res.send(query);
+  }).catch(err => {
+    res.status(500).send(err);
+  });
+});
+
 router.post('/', (req, res) => {
 
   var query = req.body;
