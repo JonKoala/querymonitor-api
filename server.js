@@ -13,7 +13,4 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use('/select', require('./routes/select'));
 app.use('/queries', require('./routes/queries'));
 
-var port = config.get('server.port');
-app.listen(port, function() {
-  console.log('Server up and running! Listening on ' + port + '...');
-});
+module.exports = app.listen(config.get('server.port'));
