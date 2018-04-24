@@ -1,0 +1,7 @@
+server:
+  port: 8088
+
+db:
+  host: 'tcees43'
+  database: 'QUERY_MONITOR'
+  driver: 'SQL Server Native Client 11.0'

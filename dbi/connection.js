@@ -1,16 +1,16 @@
 const Sequelize = require('sequelize')
 
-const appconfig = require('../appconfig')
+const config = require('config')
 
 var connection = new Sequelize({
   dialect: 'mssql',
   dialectModulePath: 'sequelize-msnodesqlv8',
   dialectOptions: {
-  	driver: appconfig['db']['driver'],
+  	driver: config.get('db.driver'),
     trustedConnection: true
   },
-  host: appconfig['db']['host'],
-  database: appconfig['db']['database'],
+  host: config.get('db.host'),
+  database: config.get('db.database'),
 
   operatorsAliases: false,
   logging: false
