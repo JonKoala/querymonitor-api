@@ -13,4 +13,6 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use('/select', require('./routes/select'));
 app.use('/queries', require('./routes/queries'));
 
+app.use(require('./utils/CustomErrorHandler'))
+
 module.exports = app.listen(config.get('server.port'));
