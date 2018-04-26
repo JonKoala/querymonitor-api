@@ -9,7 +9,7 @@ var dbi = require('../dbi')
 
 
 function isInjection(query) {
-  var blacklist = ['update', 'delete', 'insert', 'create', 'alter', 'drop']
+  var blacklist = ['update', 'delete', 'insert', 'create', 'alter', 'drop'];
   return blacklist.some(entry => query.toLowerCase().includes(entry));
 }
 
