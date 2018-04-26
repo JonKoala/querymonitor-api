@@ -6,18 +6,14 @@ var router = express.Router();
 
 var CustomError = require('../utils/CustomError')
 var dbi = require('../dbi')
+var sqlToolkit = require('../utils/sqlToolkit')
 
-
-function isInjection(query) {
-  var blacklist = ['update', 'delete', 'insert', 'create', 'alter', 'drop'];
-  return blacklist.some(entry => query.toLowerCase().includes(entry));
-}
 
 router.get('/:query', asyncHandler(async (req, res, next) => {
   var userQuery = req.params.query;
 
-  if (isInjection(userQuery))
-    throw new CustomError('sql injection detected');
+  if (sqlToolkit.isUnsafe(userQuery))
+    throw new CustomError('Potential SQL injection detected');
 
   var queryResult = await dbi.connection.query(userQuery, { type: Sequelize.QueryTypes.SELECT });
   res.send(queryResult);
