@@ -1,36 +1,28 @@
+var asyncHandler = require('express-async-handler')
 var express = require('express')
-
-var dbi = require('../dbi')
 
 var router = express.Router();
 
+var dbi = require('../dbi')
 
-router.get('/', (req, res, next) => {
 
-  dbi.query.findAll({raw:true})
-    .then(queries => {
-      res.json(queries);
-    }).catch(next);
-});
+router.get('/', asyncHandler(async (req, res, next) => {
+    var queries = await dbi.query.findAll({raw:true});
+    res.json(queries);
+}));
 
-router.get('/:id', (req, res, next) => {
-
+router.get('/:id', asyncHandler(async (req, res, next) => {
   let id = req.params.id;
 
-  dbi.query.findById(id, {raw:true})
-    .then(query => {
-      res.json(query);
-    }).catch(next);
-});
+  var query = await dbi.query.findById(id, {raw:true});
+  res.json(query);
+}));
 
-router.post('/', (req, res, next) => {
-
+router.post('/', asyncHandler(async (req, res, next) => {
   var query = req.body;
 
-  dbi.query.create(query)
-    .then(query => {
-      res.json(query);
-    }).catch(next);
-});
+  var persistedQuery = await dbi.query.create(query);
+  res.json(persistedQuery);
+}));
 
 module.exports = router;
