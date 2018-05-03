@@ -89,4 +89,77 @@ describe('queries route', function() {
 
   });
 
+  describe('/PUT requests', function() {
+
+    it('should update a valid query object', async function() {
+      var newQuery = {titulo: 'query 1', corpo: 'select 1'};
+      var insertedQuery = (await query.create(newQuery)).dataValues;
+
+      var queryToUpdate = Object.assign(insertedQuery, {titulo: 'query 2'});
+      var serverResponse = await chai.request(server).put('/queries').send(queryToUpdate);
+      expect(serverResponse).to.have.status(200);
+
+      var databaseSelectResult = await query.findById(1, {raw:true});
+      expect(databaseSelectResult).to.deep.equal(queryToUpdate);
+    });
+
+    it('should get an error if trying to update a nonexistent query', async function() {
+      var nonexistentQuery = {id: 1, titulo: 'query 1', corpo: 'select 1'};
+
+      var serverResponse = await chai.request(server).put('/queries').send(nonexistentQuery);
+      expect(serverResponse).to.have.status(500);
+    });
+
+    it('shouldn\'t change the database if trying to update a nonexistent query', async function() {
+      var newQuery = {titulo: 'query 1', corpo: 'select 1'};
+      var insertedQuery = (await query.create(newQuery)).dataValues;
+
+      var nonexistentQuery = {id: 2, titulo: 'query 2', corpo: 'select 2'};
+      var serverResponse = await chai.request(server).put('/queries').send(nonexistentQuery);
+      expect(serverResponse).to.have.status(500);
+
+      var databaseSelectResult = await query.findAll({raw:true});
+      expect(databaseSelectResult).to.be.an('array');
+      expect(databaseSelectResult).to.have.lengthOf(1);
+      expect(databaseSelectResult[0]).to.deep.equal(insertedQuery);
+    });
+
+  });
+
+  describe('/DELETE requests', function() {
+
+    it('should delete a query if specified id exists', async function() {
+      await query.create({titulo: 'query 1', corpo: 'select 1'});
+
+      var serverResponse = await chai.request(server).delete('/queries/1');
+      expect(serverResponse).to.have.status(200);
+
+      var databaseSelectResult = await query.findById(1, {raw:true});
+      expect(databaseSelectResult).to.be.null;
+    });
+
+    it('should get an error if specified id doesn\'t exist', async function() {
+      var newQuery = {titulo: 'query 1', corpo: 'select 1'};
+
+      await query.create(newQuery);
+
+      var serverResponse = await chai.request(server).delete('/queries/2');
+      expect(serverResponse).to.have.status(500);
+    });
+
+    it('shouldn\'t change the database if specified id doesn\'t exist', async function() {
+      var newQuery = {titulo: 'query 1', corpo: 'select 1'};
+
+      await query.create(newQuery);
+
+      var serverResponse = await chai.request(server).delete('/queries/2');
+      expect(serverResponse).to.have.status(500);
+
+      var expectedDatabaseSelectResult = Object.assign({id: 1}, newQuery);
+      var databaseSelectResult = await query.findById(1, {raw:true});
+      expect(databaseSelectResult).to.deep.equal(expectedDatabaseSelectResult);
+    });
+
+  });
+
 });
