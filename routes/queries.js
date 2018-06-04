@@ -34,7 +34,8 @@ router.put('/', asyncHandler(async (req, res, next) => {
     throw new CustomError(`No record could be found for the specified ID: ${query.id}`);
 
   await existingQuery.update(query);
-  res.send();
+  var savedQuery = await dbi.query.findById(query.id, {raw:true});
+  res.json(savedQuery);
 }));
 
 router.delete('/:id', asyncHandler(async (req, res, next) => {
