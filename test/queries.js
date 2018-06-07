@@ -124,6 +124,19 @@ describe('queries route', function() {
       expect(databaseSelectResult[0]).to.deep.equal(insertedQuery);
     });
 
+    it('should return the updated query object', async function() {
+      var newQuery = {titulo: 'query 1', corpo: 'select 1'};
+      var insertedQuery = (await query.create(newQuery)).dataValues;
+
+      var queryToUpdate = Object.assign(insertedQuery, {titulo: 'query 2'});
+      var serverResponse = await chai.request(server).put('/queries').send(queryToUpdate);
+      expect(serverResponse).to.have.status(200);
+      expect(serverResponse.body).to.be.an('object');
+
+      var databaseSelectResult = await query.findById(1, {raw:true});
+      expect(databaseSelectResult).to.deep.equal(serverResponse.body);
+    });
+
   });
 
   describe('/DELETE requests', function() {
