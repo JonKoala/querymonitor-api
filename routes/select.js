@@ -1,22 +1,29 @@
-var asyncHandler = require('express-async-handler')
-var express = require('express')
-var Sequelize = require('sequelize')
+const asyncHandler = require('express-async-handler')
+const express = require('express')
+
+const selectService = require('../services/select.service')
+const CustomError = require('../utils/CustomError')
 
 var router = express.Router();
 
-var CustomError = require('../utils/CustomError')
-var dbi = require('../dbi')
-var sqlToolkit = require('../utils/sqlToolkit')
 
+router.get('/paginated', asyncHandler(async (req, res, next) => {
+  const obrigatoryParams = ['rowsPerPage', 'page', 'query'];
+  if (!Object.keys(req.query).includes(...obrigatoryParams))
+    throw new CustomError('Missing obrigatory parameters');
+
+  var result = await selectService.executePaginated(req.query);
+  var count = await selectService.executeCount(req.query.query);
+  var total = count[0].count;
+
+  res.send({ total, result });
+}));
 
 router.get('/:query', asyncHandler(async (req, res, next) => {
-  var userQuery = req.params.query;
+  var query = req.params.query;
 
-  if (sqlToolkit.isUnsafe(userQuery))
-    throw new CustomError('Potential SQL injection detected');
-
-  var queryResult = await dbi.connection.query(userQuery, { type: Sequelize.QueryTypes.SELECT });
-  res.send(queryResult);
+  var result = await selectService.execute(query);
+  res.send(result);
 }));
 
 module.exports = router;
