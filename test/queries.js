@@ -14,7 +14,7 @@ describe('queries route', function() {
     return query.destroy({truncate: true});
   });
 
-  describe('/GET requests', function() {
+  describe('/GET request', function() {
 
     it('should get an empty array if no query exists', async function() {
       var response = await chai.request(server).get('/queries')
@@ -35,6 +35,10 @@ describe('queries route', function() {
       expect(response.body).all.to.have.keys('id', 'titulo', 'corpo');
     });
 
+  });
+
+  describe('/GET/:id request', function() {
+
     it('should get null as response if specified id doesn\'t exist', async function() {
       var response = await chai.request(server).get('/queries/1');
       expect(response).to.have.status(200);
@@ -53,7 +57,7 @@ describe('queries route', function() {
 
   });
 
-  describe('/POST requests', function() {
+  describe('/POST request', function() {
 
     it('should persist a valid query object', async function() {
       var newQuery = {titulo: 'query 1', corpo: 'select 1'};
@@ -89,7 +93,7 @@ describe('queries route', function() {
 
   });
 
-  describe('/PUT requests', function() {
+  describe('/PUT request', function() {
 
     it('should update a valid query object', async function() {
       var newQuery = {titulo: 'query 1', corpo: 'select 1'};
@@ -139,7 +143,7 @@ describe('queries route', function() {
 
   });
 
-  describe('/DELETE requests', function() {
+  describe('/DELETE/:id request', function() {
 
     it('should delete a query if specified id exists', async function() {
       await query.create({titulo: 'query 1', corpo: 'select 1'});
