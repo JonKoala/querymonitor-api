@@ -7,7 +7,7 @@
   "private": true,
   "scripts": {
     "start": "cross-env NODE_ENV=prod node ./server.js",
-    "test": "cross-env NODE_ENV=test mocha",
+    "test": "cross-env NODE_ENV=test mocha --slow 2000",
     "dev": "cross-env NODE_ENV=dev node ./server.js"
   },
   "dependencies": {
